@@ -31,7 +31,7 @@ It is BddPlugin for CakePHP2 !!
 
 ### Require
 
-* PHPUnit
+* PHPUnit 3.6 or later
 * CakePHP 2.0 or later
 * The data base such as MySQL must be installed, and the data base for the test must be prepared. 
 * PHP 5.3.2 or later
@@ -59,11 +59,54 @@ php composer.phar install --dev
 cd ..
 ```
 
-Then, add the following code in app/Config/bootstrap.php
+#### With A Multi-Framework Composer Library Installer 
+
+If you want to use 'A Multi-Framework Composer Library Installer'(https://github.com/composer/installers), then you should add repositories section in composer.json of your application.
+
+```json
+  "repositories": [
+    {
+        "type": "vcs",
+        "url": "git://github.com/sizuhiko/Bdd.git"
+    }    
+    # .... your application required repositories...
+  ],    
+
+  "require-dev": {
+    "sizuhiko/Bdd": "dev-master",
+    # Add which your needed driver
+    "behat/mink-goutte-driver": "*",
+    "behat/mink-selenium-driver": "*",
+    "behat/mink-selenium2-driver": "*"
+    # ... your application required dependencies.
+  }
+```
+
+#### Minimum Stability
+
+If you don't set `dev` to Minimum Stability then you should append dependencies stabilities :
+
+```json
+    "require-dev": {
+        "sizuhiko/Bdd": "dev-develop",
+        # Add non-stable dependencies
+        "pear/console_commandline": "@dev",
+        "pear/pear_exception": "@dev"
+    }
+```
+
+
+### Configuration
+
+#### Plugin load setting
+
+Add the following code in app/Config/bootstrap.php
 
 ```php
 CakePlugin::load('Bdd');
 ```
+
+#### Bake initial templates
 
 Next, the following commands are executed. (on root of CakePHP)
 ```sh
@@ -73,9 +116,7 @@ ls
 lib/Cake/Console/cake Bdd.init
 ```
 
-The initial install is an end.
-
-### Configuration
+#### Application root URL setting
 
 Setting your application root url into app/Config/behat.yml.
 ```yaml
@@ -136,6 +177,30 @@ describe "Post"
     end
     ....
 ```
+
+### Code Coverage. 
+
+We can output code coverage report.
+The feature can do only specs.
+
+`lib/Cake/Console/cake Bdd.spec --coverage-html report`
+
+write some html to 'report' directory.
+
+#### Stories code coverage
+
+If you want output coverage report with stories, may be able to use Console/CodeCoverageManager.
+Example for using CodeCoverageManager is included in Console/Command/SpecShell.php
+And, in your webserver's php.ini configuration file, configure the auto_prepend_file and auto_append_file, respectively.
+Please refer http://www.phpunit.de/manual/current/en/selenium.html
+
+### Original i18n files for stories
+
+We can replace mink-extention i18n files.
+If you add or edit transration files, followings:
+
+* make directory `/CAKEPHP_ROOT/features/steps/i18n`.
+* copy from mink-extention/i18n/*.xliff or create original xliff file.
 
 ### Let's execute it. 
 
